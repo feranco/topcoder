@@ -12,31 +12,25 @@
 
 using namespace std;
 
-int monthlyPayment(int loan, int interest, int term) {
-  const int months = 12 * term;
-  //const int monthly_interest = (interest * 10) / 12;
-  int low = loan / months;
-  int high = loan;
+const double limit = 1e-9;
 
+double howMany(int c, int time) {
+	double low = 1, high = 1 << 30;
 
-  while (low < high) {
-    long remaining_loan = loan;
-    int m = low + (high - low) / 2;
-    for (int i = 0; i < months; ++i) {
-      remaining_loan -= m;
-      remaining_loan += ceil(static_cast<float>((remaining_loan * interest)) / 12000 );
-    }
-    if (remaining_loan <= 0) high = m;
-    else low = m + 1;
-  }
-  return low;
+	while (fabs(high-low)/high > limit) {
+		double m = low + (high - low) / 2;
+		if (c*m*(log2(m)) <= time) low = m;
+		else high = m;
+	}
+	//cout << high << " " << low << " " << (high - low) << endl;
+	return low;
 }
 
-
 int main(void) {
-  vector<vector<int>> sequences{ { 1000,50,1 },{ 2000000000,6000,1 },{ 1000000,100000,1000 } };
+	vector<pair<int, int>> inputs{ { 1,8 },{ 2,16 },{ 37,12392342 },{ 1,2000000000 } };
 
-  for (int i = 0; i < sequences.size(); ++i) {
-    cout << monthlyPayment(sequences[i][0], sequences[i][1], sequences[i][2]) << endl;
-  }
+	//cout << limit;
+	for (const auto& input : inputs) cout << howMany(input.first, input.second) << endl;
+	cout << log2(4);
+
 }
