@@ -17,6 +17,10 @@
 #include <algorithm>
 using namespace std;
 
+/*
+
+//Greedy approach O(N) time, O(N) space 
+
 bool sameSign(int x, int y) {
   //if (x == 0 || y == 0) return true;
   return ((x >= 0) ^ (y < 0));
@@ -44,6 +48,40 @@ int longestZigZag(const vector<int>& sequence) {
     }
   }
   return result;
+}
+*/
+
+/* Dynamic Programming: O(N^2) time, O(N) space where N is length of sequence */
+int longestZigZag (const vector<int>& sequence) {
+  int len = sequence.size();
+
+  if (len == 0) return 0;
+  if (len == 1) return 1;
+  if (len == 2) return (sequence[0] != sequence[1]) ? 2 : 1;
+			
+  vector<int> lzs(len,1);
+  vector<int> sign(len,-1);
+  sign[1] = (sequence[0] < sequence[1]) ? 1 : 0;
+			
+
+  for (int i = 2; i < len; ++i) {
+    //int maxZs = 0;
+    for (int j = 1; j < i; ++j) {
+      int diff = sequence[i] - sequence[j];
+
+      if (diff > 0 && sign[j] == 0) {
+	if (lzs[j] + 1 > lzs[i]) {
+	  lzs[i] = lzs[j] + 1;
+	  sign[i] = 1;//+
+	}
+      }
+      else if diff < 0 && sign[j] == 1) {
+      if (lzs[j] + 1 > lzs[i]) {
+	lzs[i] = lzs[j] + 1;
+	sign[i] = 0;//-
+      }
+    }
+  }
 }
 
 
