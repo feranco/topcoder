@@ -63,9 +63,9 @@ int longestZigZag (const vector<int>& sequence) {
   vector<int> sign(len,-1);
   sign[1] = (sequence[0] < sequence[1]) ? 1 : 0;
 			
-
+   int maxZs = 0;
   for (int i = 2; i < len; ++i) {
-    //int maxZs = 0;
+   
     for (int j = 1; j < i; ++j) {
       int diff = sequence[i] - sequence[j];
 
@@ -73,15 +73,20 @@ int longestZigZag (const vector<int>& sequence) {
 	if (lzs[j] + 1 > lzs[i]) {
 	  lzs[i] = lzs[j] + 1;
 	  sign[i] = 1;//+
+	  maxZs = max(maxZs, lzs[i]);
 	}
       }
-      else if diff < 0 && sign[j] == 1) {
+      else if (diff < 0 && sign[j] == 1) {
       if (lzs[j] + 1 > lzs[i]) {
 	lzs[i] = lzs[j] + 1;
 	sign[i] = 0;//-
+	maxZs = max(maxZs, lzs[i]);
       }
     }
   }
+  
+  }
+  return maxZs;
 }
 
 
